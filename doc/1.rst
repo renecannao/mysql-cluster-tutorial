@@ -50,7 +50,9 @@ It is possible (and recommended) to define default values for each section in th
 
 
 
-Basic example of global configuration file::
+Basic example of global configuration file
+------------------------------------------
+Below is listed a very simple config.ini file::
 
 	[ndbd default]
 	NoOfReplicas=2
