@@ -11,15 +11,31 @@ Download and install binaries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Binaries can be downloaded from `MySQL website<http://dev.mysql.com/downloads/cluster/>`_ ::
 
-  cd /usr/local
-  wget http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.2/mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz/from/http://cdn.mysql.com/ -O mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
-  tar -zxf mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
-  ln -s mysql-cluster-gpl-7.2.10-linux2.6-i686 mysql
+  shell> cd /usr/local
+  shell> wget http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.2/mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz/from/http://cdn.mysql.com/ -O mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
+  shell> tar -zxf mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
+  shell> ln -s mysql-cluster-gpl-7.2.10-linux2.6-i686 mysql
 
 Create user/group
 ~~~~~~~~~~~~~~~~~ 
 Create the user/group mysql/mysql on the hosts where miysqld will be running::
 
-  useradd mysql
+  shell> useradd mysql
 
 
+Prepare the config file
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The *global configuration file* for MySQL Cluster is an INI format file named *config.ini* divided in sections.
+
+Sections in config.ini are:
+* **[computer]** : defines cluster hosts;
+* **[ndbd]** : defines data node processes;
+* **[mysqld]** or **[api]** : defines API nodes;
+* **[mgm]** or **[ndb_mgmd]** : defines management nodes;
+* **[tcp]** : defines TCP/IP connections between nodes;
+
+It is possible (and recommended) to define default values for each section in the form of **[*section* default]** . Examples:
+* [tcp default]
+* [ndb_mgmd default]
+* [ndbd default]
