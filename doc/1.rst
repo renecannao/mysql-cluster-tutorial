@@ -7,8 +7,8 @@ MySQL Cluster Installation and Configuration
 Installation
 ============
 
-* Download and install binaries
-
+Download and install binaries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Binaries can be downloaded from `MySQL website<http://dev.mysql.com/downloads/cluster/>`_ ::
 
   cd /usr/local
@@ -16,8 +16,8 @@ Binaries can be downloaded from `MySQL website<http://dev.mysql.com/downloads/cl
   tar -zxf mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
   ln -s mysql-cluster-gpl-7.2.10-linux2.6-i686 mysql
 
-* Create user/group
- 
+Create user/group
+~~~~~~~~~~~~~~~~~ 
 Create the user/group mysql/mysql on the hosts where miysqld will be running::
 
   useradd mysql
