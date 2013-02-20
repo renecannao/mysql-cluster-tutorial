@@ -29,13 +29,21 @@ Prepare the config file
 The *global configuration file* for MySQL Cluster is an INI format file named *config.ini* divided in sections.
 
 Sections in config.ini are:
+
 * **[computer]** : defines cluster hosts;
+
 * **[ndbd]** : defines data node processes;
+
 * **[mysqld]** or **[api]** : defines API nodes;
+
 * **[mgm]** or **[ndb_mgmd]** : defines management nodes;
+
 * **[tcp]** : defines TCP/IP connections between nodes;
 
 It is possible (and recommended) to define default values for each section in the form of **[*section* default]** . Examples:
+
 * [tcp default]
+
 * [ndb_mgmd default]
+
 * [ndbd default]
