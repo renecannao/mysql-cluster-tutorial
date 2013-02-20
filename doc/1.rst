@@ -40,10 +40,32 @@ Sections in config.ini are:
 
 * **[tcp]** : defines TCP/IP connections between nodes;
 
-It is possible (and recommended) to define default values for each section in the form of **[** *section* ** default]** . Examples:
+It is possible (and recommended) to define default values for each section in the form of **[** *section* **default]** . Examples:
 
 * [tcp default]
 
 * [ndb_mgmd default]
 
 * [ndbd default]
+
+
+
+Basic example of global configuration file::
+
+	[ndbd default]
+	NoOfReplicas=2
+	DataDir=/var/lib/mysql-cluster
+
+	[ndb_mgmd]
+	Hostname=mgmd1.example.com
+	DataDir/var/lib/mysql-cluster
+
+	[ndbd]
+	HostName=ndbd1.example.com
+
+	[ndbd]
+	HostName=ndbd2.example.com
+
+	[mysqld]
+	[mysqld]
+	[mysqld]
