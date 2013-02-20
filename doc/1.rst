@@ -71,3 +71,70 @@ Below is listed a very simple config.ini file::
 	[mysqld]
 	[mysqld]
 	[mysqld]
+
+
+
+Second example of global configuration file
+------------------------------------------
+Below is listed a bit more complex config.ini file::
+
+	[TCP DEFAULT]
+	SendBufferMemory=2M
+	ReceiveBufferMemory=2M
+
+	[NDB_MGMD DEFAULT]
+	PortNumber=1186
+	Datadir=/mysqlcluster/
+
+	[NDB_MGMD]
+	NodeId=1
+	Hostname=192.168.1.201
+	LogDestination=FILE:filename=ndb_1_cluster.log,maxsize=10000000,maxfiles=6
+
+	[NDBD DEFAULT]
+	NoOfReplicas=2
+	DataMemory=80M
+	IndexMemory=15M
+	LockPagesInMainMemory=1
+	Datadir=/mysqlcluster/
+
+	MaxNoOfConcurrentOperations=1000
+	MaxNoOfConcurrentTransactions=1024
+
+	StringMemory=25
+	MaxNoOfTables=1024
+	MaxNoOfOrderedIndexes=256
+	MaxNoOfUniqueHashIndexes=64
+	MaxNoOfAttributes=2560
+	MaxNoOfTriggers=2560
+
+	FragmentLogFileSize=16M
+	InitFragmentLogFiles=FULL
+	NoOfFragmentLogFiles=5
+	RedoBuffer=8M
+
+	TimeBetweenGlobalCheckpoints=1000
+	DiskCheckpointSpeedInRestart=20M
+	DiskCheckpointSpeed=4M
+	TimeBetweenLocalCheckpoints=20
+	CompressedLCP=1
+
+	HeartbeatIntervalDbDb=15000
+	HeartbeatIntervalDbApi=15000
+
+	BackupMaxWriteSize=1M
+	BackupDataBufferSize=12M
+	BackupLogBufferSize=8M
+	BackupMemory=20M
+	CompressedBackup=1
+
+	SharedGlobalMemory=10M
+	DiskPageBufferMemory=32M
+
+	[NDBD]
+	NodeId=3
+	Hostname=192.168.1.203
+
+	[NDBD]
+	NodeId=4
+	Hostname=192.168.1.204
