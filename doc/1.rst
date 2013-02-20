@@ -9,17 +9,16 @@ Installation
 
 * Download and install binaries
 
- Binaries can be downloaded from dev_mysql_com_::
+ Binaries can be downloaded from `MySQL website` <http://dev.mysql.com/downloads/cluster/>`_::
 
   cd /usr/local
   wget http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.2/mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz/from/http://cdn.mysql.com/ -O mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
   tar -zxf mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
   ln -s mysql-cluster-gpl-7.2.10-linux2.6-i686 mysql
 
-* Create user/group::
+* Create user/group
  
  Create the user/group mysql/mysql on the hosts where miysqld will be running::
   useradd mysql
 
 
-.. _dev_mysql_com http://dev.mysql.com/downloads/cluster/
