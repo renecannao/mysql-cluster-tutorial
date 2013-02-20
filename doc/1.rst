@@ -40,7 +40,7 @@ Sections in config.ini are:
 
 * **[tcp]** : defines TCP/IP connections between nodes;
 
-It is possible (and recommended) to define default values for each section in the form of **[*section* default]** . Examples:
+It is possible (and recommended) to define default values for each section in the form of **[** *section* ** default]** . Examples:
 
 * [tcp default]
 
