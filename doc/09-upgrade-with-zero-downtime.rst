@@ -11,7 +11,7 @@ Review sections `Upgrading and Downgrading MySQL Cluster NDB 7.2 <http://dev.mys
 
 Binaries can be downloaded from `MySQL website <http://dev.mysql.com/downloads/cluster/>`_ or `MySQL Archives <http://downloads.mysql.com/archives.php>`_ .
 
-For convenient, binaries are present in the USB stick and are the generic Linux version for 32 bits system.
+For convenience, binaries are present in the USB drive and are the generic Linux version for 32 bits system.
 
 Unpack the tarball into each guest node and prepare the datadir::
 

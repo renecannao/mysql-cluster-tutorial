@@ -14,7 +14,7 @@ Summary
 Copy the content of the USB drive
 ----
 
-In the USB are present:
+In the USB drive are present:
 
 * VirtualBox binaries for most platforms (copy only what you need)
 

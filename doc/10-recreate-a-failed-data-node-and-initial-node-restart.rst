@@ -142,7 +142,7 @@ Node2 is now failing to start. More information in these files::
   
   root@node2:~# cat /mysqlcluster/ndb_2_error.log
   root@node2:~# cat /mysqlcluster/ndb_2_out.log
-  root@node2:~# cat /mysqlcluster/ndb_2_ndb_2_trace.log.2
+  root@node2:~# cat /mysqlcluster/ndb_2_trace.log.2
 
 
 Perform an Initial Node Restart

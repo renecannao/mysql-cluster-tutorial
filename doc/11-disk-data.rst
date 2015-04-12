@@ -50,16 +50,16 @@ Create tablespaces
 Create the first tablespace with a first datafile::
   
   mysql> CREATE TABLESPACE ts1 ADD DATAFILE 'datafile1.dat'         
-      -> USE LOGFILE GROUP lg_1
-      -> INITIAL_SIZE=64M
-      -> ENGINE=ndb;
+         USE LOGFILE GROUP lg_1
+         INITIAL_SIZE=64M
+         ENGINE=ndb;
   Query OK, 0 rows affected (6.36 sec)
 
 Add a new datafile::
   
   mysql> ALTER TABLESPACE ts1 ADD DATAFILE 'datafile2.dat' 
-      -> INITIAL_SIZE=64M
-      -> ENGINE=ndb;
+         INITIAL_SIZE=64M
+         ENGINE=ndb;
   Query OK, 0 rows affected (2.04 sec)
 
 Create a new tablespace::

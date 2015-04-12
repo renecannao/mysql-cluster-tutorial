@@ -10,6 +10,7 @@ This section is a walkthrough to add more data in a single table, gather more in
 
 Commands::
   
+  mysql> use mydb
   mysql> DROP TABLE IF EXISTS table1;
   mysql> CREATE TABLE `table1` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -107,7 +108,7 @@ Use `ndb_desc <http://dev.mysql.com/doc/refman/5.5/en/mysql-cluster-programs-ndb
 Handling large transaction
 ----
 
-The follows create a transaction larger than MySQL Cluster can handle::
+The follows creates a transaction larger than MySQL Cluster can handle::
   
   mysql> START TRANSACTION;
   Query OK, 0 rows affected (0.00 sec)

@@ -145,7 +145,7 @@ Simulate a split brain scenario::
   
   node1> iptables -P INPUT DROP ; iptables -P OUTPUT DROP
 
-  node3> iptables -P INPUT DROP ; ; iptables -P OUTPUT DROP
+  node3> iptables -P INPUT DROP ; iptables -P OUTPUT DROP
 
 **Question:** Is MySQL Cluster still alive?
 

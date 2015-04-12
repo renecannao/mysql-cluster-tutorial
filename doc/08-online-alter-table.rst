@@ -106,7 +106,7 @@ From node3, start a series of INSERTs::
   
   node3> time for i in `seq 1 60` ; do date ; echo "INSERT INTO table1 (id,v) SELECT NULL,MD5(RAND()) FROM table1 LIMIT 1024;" | mysql mydb ; sleep 1 ; done
 
-From node2 , run the DML to add and than drop a column::
+From node2 , run the DML to add and than drop indexes::
   
   mysql> ALTER TABLE table1 ADD INDEX idx_v (v);
   Query OK, 0 rows affected (2.13 sec)

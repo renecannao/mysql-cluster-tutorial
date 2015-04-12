@@ -12,7 +12,13 @@ The choice of 32 bits binaries and version 7.2 was due to memory constraints.
 
 Unpack the tarball into each guest node and prepare the datadir::
 
+  guest> sudo su -
   guest> cd /usr/local
+  guest> tar -zxf /vagrant/mysql-cluster-gpl-7.2.8-linux2.6-i686.tar.gz
+  guest> ln -s mysql-cluster-gpl-7.2.8-linux2.6-i686 mysql
+  guest> export PATH=/usr/local/mysql/bin:$PATH
+  guest> dpkg -i /vagrant/screen_4.0.3-14ubuntu1_i386.deb
+  guest> screen
   guest> mkdir /mysqlcluster
 
 Create mysql user/group::
@@ -233,7 +239,7 @@ Start mysqld processes
 
 Install mysql system tables on each guest host::
 
-  guest> apt-get install libaio1  # this package is required by mysqld
+  guest> dpkg -i /vagrant/libaio1_0.3.107-3ubuntu2_i386.deb  # this package is required by mysqld
   guest> cd /usr/local/mysql
   guest> ./scripts/mysql_install_db
   ...
