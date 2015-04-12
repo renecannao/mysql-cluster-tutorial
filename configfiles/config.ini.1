@@ -1,0 +1,23 @@
+[ndb_mgmd]
+NodeId=1
+HostName=192.168.123.101
+DataDir=/mysqlcluster
+LogDestination=FILE:filename=ndb_1_cluster.log,maxsize=10000000,maxfiles=6
+
+[NDBD DEFAULT]
+NoOFReplicas=2
+DataDir=/mysqlcluster
+
+[NDBD]
+NodeId=2
+HostName=192.168.123.102
+
+[NDBD]
+NodeId=3
+HostName=192.168.123.103
+
+[API]
+NodeId=11
+[API]
+[API]
+[API]

@@ -1,0 +1,11 @@
+[mysql_cluster]
+ndb-connectstring=192.168.123.101
+
+[mysqld]
+user=mysql
+datadir=/var/lib/mysql
+ndbcluster
+skip-innodb
+default-storage-engine=ndbcluster
+sort_buffer_size=32k
+key_buffer_size=1M
