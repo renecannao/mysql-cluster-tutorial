@@ -76,7 +76,7 @@ Common options
 
   Specifies the address(es) of the management node(s), and optionally their port. Ex::
   
-    ndb_mgm --ndb-connectstring=192.168.123.101:1186
+    ndb_mgm --ndb-connectstring=server-1:1186
 
 * --ndb-nodeid
 
