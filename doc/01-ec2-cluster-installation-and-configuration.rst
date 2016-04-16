@@ -159,7 +159,7 @@ Copy the file `config.ini <https://github.com/renecannao/mysql-cluster-tutorial/
   
   node1> vi /mysqlcluster/config.ini
 
-Copy `my.cnf <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/config.ini.ec2>`_ into all nodes::
+Copy `my.cnf <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/my.cnf.ec2>`_ into all nodes::
 
   guest> vi /etc/my.cnf
 
