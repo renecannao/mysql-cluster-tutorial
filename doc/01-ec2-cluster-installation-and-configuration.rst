@@ -19,6 +19,8 @@ Unpack the tarball into each guest node and prepare the datadir::
   guest> export PATH=/usr/local/mysql/bin:$PATH
   guest> mkdir /mysqlcluster
 
+Add `export PATH=/usr/local/mysql/bin:$PATH` to `/root/.bashrc` .
+
 Create mysql user/group::
 
   guest> useradd mysql
@@ -155,11 +157,11 @@ Below is listed a bit more complex config.ini file::
 Configure and start your first MySQL Cluster
 ----
 
-Copy the file `config.ini <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/config.ini.ec2>`_ into node1::
+Copy the file `config.ini <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/config.ini.ec2>`_ into node1 **only**::
   
   node1> vi /mysqlcluster/config.ini
 
-Copy `my.cnf <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/my.cnf.ec2>`_ into all nodes::
+Copy `my.cnf <https://github.com/renecannao/mysql-cluster-tutorial/blob/master/configfiles/my.cnf.ec2>`_ into **all** nodes::
 
   guest> vi /etc/my.cnf
 
@@ -174,7 +176,7 @@ Pre-requirement. Update /etc/hosts ::
 Start the management node::
 
   node1> ndb_mgmd --config-dir=/mysqlcluster/ --config-file=/mysqlcluster/config.ini 
-  MySQL Cluster Management Server mysql-5.5.27 ndb-7.2.8
+  MySQL Cluster Management Server mysql-5.6.28 ndb-7.4.10
  
 Don't trust the output of ndb_mgmd . Verify that the process is running, and verify the cluster log::
   
@@ -207,7 +209,7 @@ Verify the status of the cluster with ndb_mgm::
 Start the data nodes
 ~~~~
 
-Start the data nodes::
+Start the data nodes on node2 and node3::
   
   node2> ndbd
   2013-03-23 20:32:17 [ndbd] INFO     -- Angel connected to '192.168.123.101:1186'
