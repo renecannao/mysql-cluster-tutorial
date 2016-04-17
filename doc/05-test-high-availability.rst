@@ -128,6 +128,7 @@ Try to access MySQL Cluster from SQL Node on node2::
 Stop all network communication on node1 to simulate a HW failure::
   
   node1> iptables -I INPUT -p tcp --dport 22 -j ACCEPT ; iptables -I OUTPUT -p tcp --sport 22 -j ACCEPT
+  node1> iptables -I INPUT -p tcp --sport 22 -j ACCEPT ; iptables -I OUTPUT -p tcp --dport 22 -j ACCEPT
   node1> iptables -P INPUT DROP ; iptables -P OUTPUT DROP
 
 Is the MySQL Cluster still alive?
