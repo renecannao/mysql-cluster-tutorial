@@ -6,18 +6,15 @@ Upgrade in MySQL Cluster is often possible with zero downtime.
 
 Upgraded (and downgrades) are performed through rolling restarts.
 
-Review sections `Upgrading and Downgrading MySQL Cluster NDB 7.2 <http://dev.mysql.com/doc/refman/5.5/en/mysql-cluster-upgrade-downgrade.html>`_ and `Upgrade and downgrade compatibility: MySQL Cluster NDB 7.x <http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster-upgrade-downgrade-compatibility-7.x.html>`_ for a list of compatibility notes and issues when upgrading and/or upgrading MySQL Cluster.
+Review sections `Upgrading and Downgrading MySQL Cluster NDB 7.2 <http://dev.mysql.com/doc/refman/5.6/en/mysql-cluster-upgrade-downgrade.html>`_ and `Upgrading and Downgrading MySQL Cluster <http://dev.mysql.com/doc/refman/5.6/en/mysql-cluster-upgrade-downgrade.html>`_ for a list of compatibility notes and issues when upgrading and/or upgrading MySQL Cluster.
 
 
 Binaries can be downloaded from `MySQL website <http://dev.mysql.com/downloads/cluster/>`_ or `MySQL Archives <http://downloads.mysql.com/archives.php>`_ .
 
-For convenience, binaries are present in the USB drive and are the generic Linux version for 32 bits system.
+For convenience, binaries are present in the home directory and are the generic Linux version for 64 bits system.
 
 Unpack the tarball into each guest node and prepare the datadir::
 
-  guest> cd /usr/local
-  guest> tar -zxf /vagrant/mysql-cluster-gpl-7.4.10-linux2.6-i686.tar.gz
-  guest> rm mysql
   guest> cd /usr/local
   guest> sudo tar -zxf ~/mysql-cluster-gpl-7.4.10-linux-glibc2.5-x86_64.tar.gz
   guest> sudo su -
@@ -201,5 +198,5 @@ Verify the status of the Cluster::
   id=13 (not connected, accepting connect from any host)
   id=14   @192.168.123.102  (mysql-5.6.28 ndb-7.4.10)
 
-The whole Cluster is now upgraded from 5.6.28 ndb-7.2.8 to 5.6.28 ndb-7.4.10
+The whole Cluster is now upgraded from 5.6.28 ndb-7.4.9 to 5.6.28 ndb-7.4.10
 
