@@ -203,8 +203,29 @@ We can proceed removing an index, and run OPTIMIZE TABLE::
 We can now alter the table to use Disk Data::
   
   mysql> ALTER TABLE table1 TABLESPACE ts1 STORAGE DISK;
-  Query OK, 235655 rows affected (27.15 sec)
-  Records: 235655  Duplicates: 0  Warnings: 0
+  Query OK, 0 rows affected (0.18 sec)
+  Records: 0  Duplicates: 0  Warnings: 0
+  
+  mysql> SHOW TABLE STATUS LIKE 'table1'\G                                                                                                                                                   *************************** 1. row ***************************
+             Name: table1
+           Engine: ndbcluster
+          Version: 10
+       Row_format: Dynamic
+             Rows: 211048
+   Avg_row_length: 28
+      Data_length: 16318464
+  Max_data_length: 0
+     Index_length: 0
+        Data_free: 0
+   Auto_increment: 272492
+      Create_time: NULL
+      Update_time: NULL
+       Check_time: NULL
+        Collation: latin1_swedish_ci
+         Checksum: NULL
+   Create_options:
+          Comment:
+  1 row in set (0.00 sec)
   
   mysql> SHOW CREATE TABLE table1\G
   *************************** 1. row ***************************
@@ -215,82 +236,31 @@ We can now alter the table to use Disk Data::
     `v2` int(11) DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_v` (`v`)
-  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=812523 DEFAULT CHARSET=latin1
-  1 row in set (0.01 sec)
-  
-  
-  ndb_mgm> ALL REPORT MEMORY
-  Node 2: Data usage is 36%(926 32K pages of total 2560)
-  Node 2: Index usage is 22%(537 8K pages of total 2336)
-  Node 3: Data usage is 36%(926 32K pages of total 2560)
-  Node 3: Index usage is 22%(537 8K pages of total 2336)
+  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=272492 DEFAULT CHARSET=latin1
+  1 row in set (0.00 sec)
 
+  ndb_mgm> all report memory
+  Node 2: Data usage is 32%(831 32K pages of total 2560)
+  Node 2: Index usage is 19%(457 8K pages of total 2336)
+  Node 3: Data usage is 32%(831 32K pages of total 2560)
+  Node 3: Index usage is 19%(458 8K pages of total 2336)
 
-Why Data usage ( in memory ) increased? We can try to run OPTIMIZE after ALTER TABLE::
+  shell> ndb_desc -p -d mydb table1
+  ...
   
-  mysql> OPTIMIZE TABLE table1;
-  +-------------+----------+----------+----------+
-  | Table       | Op       | Msg_type | Msg_text |
-  +-------------+----------+----------+----------+
-  | mydb.table1 | optimize | status   | OK       |
-  +-------------+----------+----------+----------+
-  1 row in set (39.64 sec)
-  
-  ndb_mgm> ALL REPORT MEMORY
-  Node 2: Data usage is 36%(936 32K pages of total 2560)
-  Node 2: Index usage is 22%(537 8K pages of total 2336)
-  Node 3: Data usage is 36%(936 32K pages of total 2560)
-  Node 3: Index usage is 22%(537 8K pages of total 2336)
 
+Memory usage didn't change, and the table is still in memory, completely.
+Let try a different ALTER TABLE::
 
-When Disk Data is used, each record uses an in-memory 8-byte pointer to the portion of the row stored in Data Disk. This means that Disk Data is convenient only if a lot of columns can be moved away from memory.
-  
-We can now try to move "v" in Disk Data::
-  
-  mysql> ALTER TABLE table1 DROP INDEX idx_v; OPTIMIZE TABLE table1;
-  Query OK, 0 rows affected (0.28 sec)
-  Records: 0  Duplicates: 0  Warnings: 0
-  
-  +-------------+----------+----------+----------+
-  | Table       | Op       | Msg_type | Msg_text |
-  +-------------+----------+----------+----------+
-  | mydb.table1 | optimize | status   | OK       |
-  +-------------+----------+----------+----------+
-  1 row in set (27.33 sec)
-  
-  mysql> SHOW CREATE TABLE table1\G
-  *************************** 1. row ***************************
-         Table: table1
-  Create Table: CREATE TABLE `table1` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `v` varchar(32) NOT NULL,
-    `v2` int(11) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=812523 DEFAULT CHARSET=latin1
-  1 row in set (0.01 sec)
-  
-  
-  
-  ndb_mgm> ALL REPORT MEMORY
-  Node 2: Data usage is 32%(835 32K pages of total 2560)
-  Node 2: Index usage is 22%(537 8K pages of total 2336)
-  Node 3: Data usage is 32%(835 32K pages of total 2560)
-  Node 3: Index usage is 22%(537 8K pages of total 2336)
+  mysql> ALTER TABLE table1 MODIFY v2 int(11) DEFAULT NULL STORAGE DISK;
+  Query OK, 211048 rows affected (5.28 sec)
+  Records: 211048  Duplicates: 0  Warnings: 0
 
+Now let's check ndb_desc::
 
-Question: was column "v" already moved on Data Disk?
-
-* SHOW CREATE TABLE doesn't return enough information;
-
-* DROP INDEX returned 0 rows affected: this means it was an online operation, therefore performed in memory;
-
-* DataMemory usage dropped by only 4%
-
-Checking with ndb_desc::
-  
-  root@node1:~# ndb_desc -p -d mydb table1
+  ndb_desc -p -d mydb table1
   -- table1 --
-  Version: 33554436
+  Version: 16777218
   Fragment type: HashMapPartition
   K Value: 6
   Min load factor: 78
@@ -298,7 +268,7 @@ Checking with ndb_desc::
   Temporary table: no
   Number of attributes: 3
   Number of primary keys: 1
-  Length of frm data: 275
+  Length of frm data: 317
   Row Checksum: 1
   Row GCI: 1
   SingleUserMode: 0
@@ -312,13 +282,106 @@ Checking with ndb_desc::
   id Int PRIMARY KEY DISTRIBUTION KEY AT=FIXED ST=MEMORY AUTO_INCR
   v Varchar(32;latin1_swedish_ci) NOT NULL AT=SHORT_VAR ST=MEMORY
   v2 Int NULL AT=FIXED ST=DISK
-  -- Indexes -- 
+  -- Indexes --
+  PRIMARY KEY(id) - UniqueHashIndex
+  idx_v(v) - OrderedIndex
+  PRIMARY(id) - OrderedIndex
+  -- Per partition info --
+  Partition       Row count       Commit count    Frag fixed memory       Frag varsized memory    Extent_space    Free extent_space
+  0               105063          105063          3801088                 4784128                 3145728         1032180
+  1               105985          105985          3833856                 4816896                 3145728         1013740
+  
+  
+  NDBT_ProgramExit: 0 - OK
+
+Memory usage::
+
+  ndb_mgm> ALL REPORT MEMORY
+  Node 2: Data usage is 33%(851 32K pages of total 2560)
+  Node 2: Index usage is 20%(489 8K pages of total 2336)
+  Node 3: Data usage is 33%(851 32K pages of total 2560)
+  Node 3: Index usage is 20%(489 8K pages of total 2336) 
+
+
+Why Data usage ( in memory ) increased? We can try to run OPTIMIZE after ALTER TABLE::
+  
+  mysql> OPTIMIZE TABLE table1;
+  +-------------+----------+----------+----------+
+  | Table       | Op       | Msg_type | Msg_text |
+  +-------------+----------+----------+----------+
+  | mydb.table1 | optimize | status   | OK       |
+  +-------------+----------+----------+----------+
+  1 row in set (39.64 sec)
+  
+  ndb_mgm> ALL REPORT MEMORY
+  Node 2: Data usage is 33%(851 32K pages of total 2560)
+  Node 2: Index usage is 20%(489 8K pages of total 2336)
+  Node 3: Data usage is 33%(851 32K pages of total 2560)
+  Node 3: Index usage is 20%(489 8K pages of total 2336) 
+
+
+When Disk Data is used, each record uses an in-memory 8-byte pointer to the portion of the row stored in Data Disk. This means that Disk Data is convenient only if a lot of columns can be moved away from memory.
+  
+We can now try to move "v" in Disk Data::
+  
+  mysql> ALTER TABLE table1 DROP INDEX idx_v; OPTIMIZE TABLE table1;
+  Query OK, 0 rows affected (0.17 sec)
+  Records: 0  Duplicates: 0  Warnings: 0
+  
+  +-------------+----------+----------+----------+
+  | Table       | Op       | Msg_type | Msg_text |
+  +-------------+----------+----------+----------+
+  | mydb.table1 | optimize | status   | OK       |
+  +-------------+----------+----------+----------+
+  1 row in set (12.18 sec)
+
+Question: was column "v" already moved on Data Disk?
+
+* SHOW CREATE TABLE doesn't return enough information;
+
+* DROP INDEX returned 0 rows affected: this means it was an online operation, therefore performed in memory;
+
+* DataMemory usage dropped by only 4% ::
+
+  ndb_mgm> all report memory
+  Node 2: Data usage is 29%(761 32K pages of total 2560)
+  Node 2: Index usage is 20%(489 8K pages of total 2336)
+  Node 3: Data usage is 29%(761 32K pages of total 2560)
+  Node 3: Index usage is 20%(489 8K pages of total 2336)
+
+Checking with ndb_desc::
+  
+  # ndb_desc -p -d mydb table1
+  -- table1 --
+  Version: 33554434
+  Fragment type: HashMapPartition
+  K Value: 6
+  Min load factor: 78
+  Max load factor: 80
+  Temporary table: no
+  Number of attributes: 3
+  Number of primary keys: 1
+  Length of frm data: 300
+  Row Checksum: 1
+  Row GCI: 1
+  SingleUserMode: 0
+  ForceVarPart: 1
+  FragmentCount: 2
+  ExtraRowGciBits: 0
+  ExtraRowAuthorBits: 0
+  TableStatus: Retrieved
+  HashMap: DEFAULT-HASHMAP-3840-2
+  -- Attributes --
+  id Int PRIMARY KEY DISTRIBUTION KEY AT=FIXED ST=MEMORY AUTO_INCR
+  v Varchar(32;latin1_swedish_ci) NOT NULL AT=SHORT_VAR ST=MEMORY
+  v2 Int NULL AT=FIXED ST=DISK
+  -- Indexes --
   PRIMARY KEY(id) - UniqueHashIndex
   PRIMARY(id) - OrderedIndex
-  -- Per partition info -- 
+  -- Per partition info --
   Partition       Row count       Commit count    Frag fixed memory       Frag varsized memory    Extent_space    Free extent_space
-  0               116728          350184          4227072                 5308416                 3145728         798880           
-  1               118927          356781          4325376                 5406720                 3145728         754900           
+  0               105063          315189          3801088                 4784128                 3145728         1032180
+  1               105985          317955          3833856                 4816896                 3145728         1013740
   
   
   NDBT_ProgramExit: 0 - OK
@@ -327,34 +390,33 @@ Only column "v2" seems to be on disk ( ST=DISK ), while column "v" is in memory 
 
 Moving column "v2" to disk::
   
-  mysql> ALTER TABLE table1 TABLESPACE ts1 STORAGE DISK;
-  Query OK, 235655 rows affected (18.76 sec)
-  Records: 235655  Duplicates: 0  Warnings: 0
+  mysql> ALTER TABLE table1 MODIFY v varchar(32) NOT NULL STORAGE DISK;
+  Query OK, 211048 rows affected (3.30 sec)
+  Records: 211048  Duplicates: 0  Warnings: 0
   
-  mysql> SHOW CREATE TABLE table1\G
-  *************************** 1. row ***************************
+  mysql> SHOW CREATE TABLE table1\G                                                                                                                                                          *************************** 1. row ***************************
          Table: table1
   Create Table: CREATE TABLE `table1` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `v` varchar(32) NOT NULL,
-    `v2` int(11) DEFAULT NULL,
+    `v` varchar(32) NOT NULL /*!50606 STORAGE DISK */,
+    `v2` int(11) /*!50606 STORAGE DISK */ DEFAULT NULL,
     PRIMARY KEY (`id`)
-  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=812523 DEFAULT CHARSET=latin1
-  1 row in set (0.00 sec)
+  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=395994 DEFAULT CHARSET=latin1
+  1 row in set (0.00 sec)  
 
 New memory usage::
   
   ndb_mgm> ALL REPORT MEMORY
-  Node 2: Data usage is 19%(503 32K pages of total 2560)
-  Node 2: Index usage is 22%(537 8K pages of total 2336)
-  Node 3: Data usage is 19%(503 32K pages of total 2560)
-  Node 3: Index usage is 22%(537 8K pages of total 2336)
+  Node 2: Data usage is 18%(464 32K pages of total 2560)
+  Node 2: Index usage is 20%(489 8K pages of total 2336)
+  Node 3: Data usage is 18%(464 32K pages of total 2560)
+  Node 3: Index usage is 20%(489 8K pages of total 2336)
 
 New output of ndb_desc::
   
-  root@node1:~# ndb_desc -p -d mydb table1
+  # ndb_desc -p -d mydb table1
   -- table1 --
-  Version: 16777227
+  Version: 16777219
   Fragment type: HashMapPartition
   K Value: 6
   Min load factor: 78
@@ -362,7 +424,7 @@ New output of ndb_desc::
   Temporary table: no
   Number of attributes: 3
   Number of primary keys: 1
-  Length of frm data: 275
+  Length of frm data: 296
   Row Checksum: 1
   Row GCI: 1
   SingleUserMode: 0
@@ -376,84 +438,21 @@ New output of ndb_desc::
   id Int PRIMARY KEY DISTRIBUTION KEY AT=FIXED ST=MEMORY AUTO_INCR
   v Varchar(32;latin1_swedish_ci) NOT NULL AT=SHORT_VAR ST=DISK
   v2 Int NULL AT=FIXED ST=DISK
-  -- Indexes -- 
+  -- Indexes --
   PRIMARY KEY(id) - UniqueHashIndex
   PRIMARY(id) - OrderedIndex
-  -- Per partition info -- 
+  -- Per partition info --
   Partition       Row count       Commit count    Frag fixed memory       Frag varsized memory    Extent_space    Free extent_space
-  0               116728          116728          4227072                 0                       7340032         763840           
-  1               118927          118927          4325376                 0                       7340032         640696           
+  0               105063          105063          3801088                 0                       6291456         374136
+  1               105985          105985          3833856                 0                       6291456         322504
   
   
   NDBT_ProgramExit: 0 - OK
+  
 
 Now both columns "v" and "v2" are on Data Disk.
 
-It is also possible to specify which column should be stored on Data Disk and which not. In fact, it is possible to specify the storage to use ( MEMORY or DISK ) within the ALTER TABLE statement.
 
-To move column "v2" from Disk Data (STORAGE DISK) to DataMemory (STORAGE MEMORY)::
-  
-  mysql> ALTER TABLE table1 MODIFY v2 INT STORAGE MEMORY;
-  Query OK, 235655 rows affected (17.99 sec)
-  Records: 235655  Duplicates: 0  Warnings: 0
-  
-  mysql> SHOW CREATE TABLE table1\G
-  *************************** 1. row ***************************
-         Table: table1
-  Create Table: CREATE TABLE `table1` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `v` varchar(32) NOT NULL,
-    `v2` int(11) /*!50120 STORAGE MEMORY */ DEFAULT NULL,
-    PRIMARY KEY (`id`)
-  ) /*!50100 TABLESPACE ts1 STORAGE DISK */ ENGINE=ndbcluster AUTO_INCREMENT=812523 DEFAULT CHARSET=latin1
-  1 row in set (0.00 sec)
-  
-  
-  
-  
-  ndb_mgm> ALL REPORT MEMORY
-  Node 2: Data usage is 21%(561 32K pages of total 2560)
-  Node 2: Index usage is 22%(537 8K pages of total 2336)
-  Node 3: Data usage is 21%(561 32K pages of total 2560)
-  Node 3: Index usage is 22%(537 8K pages of total 2336)
-  
-  
-  
-  root@node1:~# ndb_desc -p -d mydb table1
-  -- table1 --
-  Version: 16777221
-  Fragment type: HashMapPartition
-  K Value: 6
-  Min load factor: 78
-  Max load factor: 80
-  Temporary table: no
-  Number of attributes: 3
-  Number of primary keys: 1
-  Length of frm data: 277
-  Row Checksum: 1
-  Row GCI: 1
-  SingleUserMode: 0
-  ForceVarPart: 1
-  FragmentCount: 2
-  ExtraRowGciBits: 0
-  ExtraRowAuthorBits: 0
-  TableStatus: Retrieved
-  HashMap: DEFAULT-HASHMAP-3840-2
-  -- Attributes --
-  id Int PRIMARY KEY DISTRIBUTION KEY AT=FIXED ST=MEMORY AUTO_INCR
-  v Varchar(32;latin1_swedish_ci) NOT NULL AT=SHORT_VAR ST=DISK
-  v2 Int NULL AT=FIXED ST=MEMORY
-  -- Indexes -- 
-  PRIMARY KEY(id) - UniqueHashIndex
-  PRIMARY(id) - OrderedIndex
-  -- Per partition info -- 
-  Partition       Row count       Commit count    Frag fixed memory       Frag varsized memory    Extent_space    Free extent_space
-  0               116728          116728          5177344                 0                       6291456         663936           
-  1               118927          118927          5275648                 0                       6291456         558384           
-  
-  
-  NDBT_ProgramExit: 0 - OK
-   
 Verify status of Disk Data files::
    
   mysql> USE INFORMATION_SCHEMA
