@@ -11,6 +11,10 @@ Indexes statistics can be incorrect in NDBCLUSTER if ANALYZE TABLE is not execut
 
 Add a new index on test table::
   
+  mysql> ALTER TABLE table1 MODIFY v2 int(11) STORAGE MEMORY DEFAULT NULL;
+  Query OK, 218216 rows affected (3.37 sec)
+  Records: 218216  Duplicates: 0  Warnings: 0
+  
   mysql> ALTER TABLE table1 ADD INDEX idx_v2(v2);
   Query OK, 0 rows affected (1.26 sec)
   Records: 0  Duplicates: 0  Warnings: 0
@@ -28,9 +32,11 @@ Updated some rows::
 Run EXPLAIN on a index scan range, and verify the matching rows::
   
   mysql> EXPLAIN SELECT COUNT(*) FROM table1 WHERE v2 BETWEEN 1 AND 10;
-  +----+-------------+--------+-------+---------------+--------+---------+------+-------+-----------------------------------+
-  | id | select_type | table  | type  | possible_keys | key    | key_len | ref  | rows  | Extra                             |
-  +----+-------------+--------+-------+---------------+--------+---------+------+-------+-----------------------------------+
+  +----+-------------+--------+-------+---------------+--------+---------+------+-------+----------------------------------------------+
+  | id | select_type | table  | type  | possible_keys | key    | key_len | ref  | rows  | Extra                                        |
+  +----+-------------+--------+-------+---------------+--------+---------+------+-------+----------------------------------------------+
+  |  1 | SIMPLE      | table1 | range | idx_v2        | idx_v2 | 5       | NULL | 10910 | Using where with pushed condition; Using MRR |
+  +----+-------------+--------+-------+---------------+--------+---------+------+-------+----------------------------------------------+
   |  1 | SIMPLE      | table1 | range | idx_v2        | idx_v2 | 5       | NULL | 11782 | Using where with pushed condition |
   +----+-------------+--------+-------+---------------+--------+---------+------+-------+-----------------------------------+
   1 row in set (0.00 sec)

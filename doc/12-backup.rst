@@ -99,7 +99,7 @@ During this first backup, the Cluster was not being written as there were no cli
 
 Starting a script that continuously writes data in the cluster::
   
-  root@node3:~# for i in `seq 1 60` ; do echo "INSERT INTO table1 (id,v) SELECT NULL,MD5(RAND()) FROM table1 LIMIT 1024;" | mysql mydb ; sleep 1 ; done
+  root@node3:~# for i in `seq 1 600` ; do echo "INSERT INTO table1 (id,v) SELECT NULL,MD5(RAND()) FROM table1 LIMIT 1024;" | mysql mydb ; sleep 0.1 ; done
 
 And starting a backup after few seconds::
   
