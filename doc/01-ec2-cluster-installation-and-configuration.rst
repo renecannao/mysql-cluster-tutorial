@@ -19,7 +19,9 @@ Unpack the tarball into each guest node and prepare the datadir::
   guest> export PATH=/usr/local/mysql/bin:$PATH
   guest> mkdir /mysqlcluster
 
-Add `export PATH=/usr/local/mysql/bin:$PATH` to `/root/.bashrc` .
+For semplicity, add to /root/.bashrc ::
+
+  export PATH=/usr/local/mysql/bin:$PATH
 
 Create mysql user/group::
 
