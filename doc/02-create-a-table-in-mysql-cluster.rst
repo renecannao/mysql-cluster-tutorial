@@ -59,7 +59,7 @@ Create a new table in one of the SQL nodes::
 **Lab** : Verify that the table and the data is available in all SQL nodes::
   
   mysql> use mydb;
-  mysql> CREATE TABLE table1\G
+  mysql> SHOW CREATE TABLE table1\G
   mysql> SELECT * FROM table1;
 
 **Lab** : In which order are the rows returned?

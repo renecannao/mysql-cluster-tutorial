@@ -12,10 +12,10 @@ For convenience, binaries are already present on all the EC2 instances.
 Unpack the tarball into each guest node and prepare the datadir::
 
   guest> cd /usr/local
-  guest> sudo tar -zxf ~/mysql-cluster-gpl-7.4.10-linux-glibc2.5-x86_64.tar.gz
+  guest> sudo tar -zxf ~/mysql-cluster-gpl-7.4.9-linux-glibc2.5-x86_64.tar.gz
   guest> sudo su -
   guest> cd /usr/local
-  guest> ln -s mysql-cluster-gpl-7.4.10-linux-glibc2.5-x86_64 mysql
+  guest> ln -s mysql-cluster-gpl-7.4.9-linux-glibc2.5-x86_64 mysql
   guest> export PATH=/usr/local/mysql/bin:$PATH
   guest> mkdir /mysqlcluster
 
@@ -178,7 +178,7 @@ Pre-requirement. Update /etc/hosts ::
 Start the management node::
 
   node1> ndb_mgmd --config-dir=/mysqlcluster/ --config-file=/mysqlcluster/config.ini 
-  MySQL Cluster Management Server mysql-5.6.28 ndb-7.4.10
+  MySQL Cluster Management Server mysql-5.6.28 ndb-7.4.9
  
 Don't trust the output of ndb_mgmd . Verify that the process is running, and verify the cluster log::
   

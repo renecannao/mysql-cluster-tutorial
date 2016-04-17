@@ -16,9 +16,14 @@ For convenience, binaries are present in the USB drive and are the generic Linux
 Unpack the tarball into each guest node and prepare the datadir::
 
   guest> cd /usr/local
-  guest> tar -zxf /vagrant/mysql-cluster-gpl-7.2.10-linux2.6-i686.tar.gz
+  guest> tar -zxf /vagrant/mysql-cluster-gpl-7.4.10-linux2.6-i686.tar.gz
   guest> rm mysql
-  guest> ln -s mysql-cluster-gpl-7.2.10-linux2.6-i686 mysql
+  guest> cd /usr/local
+  guest> sudo tar -zxf ~/mysql-cluster-gpl-7.4.10-linux-glibc2.5-x86_64.tar.gz
+  guest> sudo su -
+  guest> cd /usr/local
+  guest> rm mysql
+  guest> ln -s mysql-cluster-gpl-7.4.10-linux-glibc2.5-x86_64 mysql
 
 Verify that Cluster is up and running. Verify also the version::
   
@@ -26,16 +31,16 @@ Verify that Cluster is up and running. Verify also the version::
   Cluster Configuration
   ---------------------
   [ndbd(NDB)]     2 node(s)
-  id=2    @192.168.123.102  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0, Master)
-  id=3    @192.168.123.103  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0)
+  id=2    @192.168.123.102  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0, Master)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.103  (mysql-5.5.27 ndb-7.2.8)
-  id=12   @192.168.123.102  (mysql-5.5.27 ndb-7.2.8)
-  id=13   @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=11   @192.168.123.103  (mysql-5.6.28 ndb-7.4.9)
+  id=12   @192.168.123.102  (mysql-5.6.28 ndb-7.4.9)
+  id=13   @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   id=14 (not connected, accepting connect from any host)
 
 
@@ -54,16 +59,16 @@ Check the status from ndb_mgm::
   Cluster Configuration
   ---------------------
   [ndbd(NDB)]     2 node(s)
-  id=2    @192.168.123.102  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0, Master)
-  id=3    @192.168.123.103  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0)
+  id=2    @192.168.123.102  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0, Master)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.103  (mysql-5.5.27 ndb-7.2.8)
-  id=12   @192.168.123.102  (mysql-5.5.27 ndb-7.2.8)
-  id=13   @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=11   @192.168.123.103  (mysql-5.6.28 ndb-7.4.9)
+  id=12   @192.168.123.102  (mysql-5.6.28 ndb-7.4.9)
+  id=13   @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   id=14 (not connected, accepting connect from any host)
 
 
@@ -84,15 +89,15 @@ Verify the status::
   ---------------------
   [ndbd(NDB)]     2 node(s)
   id=2 (not connected, accepting connect from 192.168.123.102)
-  id=3    @192.168.123.103  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0, Master)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0, Master)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.103  (mysql-5.5.27 ndb-7.2.8)
-  id=12   @192.168.123.102  (mysql-5.5.27 ndb-7.2.8)
-  id=13   @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=11   @192.168.123.103  (mysql-5.6.28 ndb-7.4.9)
+  id=12   @192.168.123.102  (mysql-5.6.28 ndb-7.4.9)
+  id=13   @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   id=14 (not connected, accepting connect from any host)
 
 
@@ -108,16 +113,16 @@ Wait and verify that Data Node was started successfully::
   Cluster Configuration
   ---------------------
   [ndbd(NDB)]     2 node(s)
-  id=2    @192.168.123.102  (mysql-5.5.29 ndb-7.2.10, Nodegroup: 0)
-  id=3    @192.168.123.103  (mysql-5.5.27 ndb-7.2.8, Nodegroup: 0, Master)
+  id=2    @192.168.123.102  (mysql-5.6.28 ndb-7.4.10, Nodegroup: 0)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.9, Nodegroup: 0, Master)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.103  (mysql-5.5.27 ndb-7.2.8)
-  id=12   @192.168.123.102  (mysql-5.5.27 ndb-7.2.8)
-  id=13   @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=11   @192.168.123.103  (mysql-5.6.28 ndb-7.4.9)
+  id=12   @192.168.123.102  (mysql-5.6.28 ndb-7.4.9)
+  id=13   @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   id=14 (not connected, accepting connect from any host)
 
 
@@ -129,16 +134,16 @@ Verify the status of the Cluster::
   Cluster Configuration
   ---------------------
   [ndbd(NDB)]     2 node(s)
-  id=2    @192.168.123.102  (mysql-5.5.29 ndb-7.2.10, Nodegroup: 0, Master)
-  id=3    @192.168.123.103  (mysql-5.5.29 ndb-7.2.10, Nodegroup: 0)
+  id=2    @192.168.123.102  (mysql-5.6.28 ndb-7.4.10, Nodegroup: 0, Master)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.10, Nodegroup: 0)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.103  (mysql-5.5.27 ndb-7.2.8)
-  id=12   @192.168.123.102  (mysql-5.5.27 ndb-7.2.8)
-  id=13   @192.168.123.101  (mysql-5.5.27 ndb-7.2.8)
+  id=11   @192.168.123.103  (mysql-5.6.28 ndb-7.4.9)
+  id=12   @192.168.123.102  (mysql-5.6.28 ndb-7.4.9)
+  id=13   @192.168.123.101  (mysql-5.6.28 ndb-7.4.9)
   id=14 (not connected, accepting connect from any host)
 
 
@@ -184,17 +189,17 @@ Verify the status of the Cluster::
   Cluster Configuration
   ---------------------
   [ndbd(NDB)]     2 node(s)
-  id=2    @192.168.123.102  (mysql-5.5.29 ndb-7.2.10, Nodegroup: 0, Master)
-  id=3    @192.168.123.103  (mysql-5.5.29 ndb-7.2.10, Nodegroup: 0)
+  id=2    @192.168.123.102  (mysql-5.6.28 ndb-7.4.10, Nodegroup: 0, Master)
+  id=3    @192.168.123.103  (mysql-5.6.28 ndb-7.4.10, Nodegroup: 0)
   
   [ndb_mgmd(MGM)] 1 node(s)
-  id=1    @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
+  id=1    @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
   
   [mysqld(API)]   4 node(s)
-  id=11   @192.168.123.101  (mysql-5.5.29 ndb-7.2.10)
-  id=12   @192.168.123.103  (mysql-5.5.29 ndb-7.2.10)
+  id=11   @192.168.123.101  (mysql-5.6.28 ndb-7.4.10)
+  id=12   @192.168.123.103  (mysql-5.6.28 ndb-7.4.10)
   id=13 (not connected, accepting connect from any host)
-  id=14   @192.168.123.102  (mysql-5.5.29 ndb-7.2.10)
+  id=14   @192.168.123.102  (mysql-5.6.28 ndb-7.4.10)
 
-The whole Cluster is now upgraded from 5.5.27 ndb-7.2.8 to 5.5.29 ndb-7.2.10
+The whole Cluster is now upgraded from 5.6.28 ndb-7.2.8 to 5.6.28 ndb-7.4.10
 

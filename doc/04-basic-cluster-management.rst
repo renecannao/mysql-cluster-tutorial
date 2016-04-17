@@ -47,7 +47,7 @@ Restart a data node process directly from the management node::
 Shutdown the Cluster
 ----
 
-There are 2 possible ways to shutdown MySQL Cluster:
+There are 3 possible ways to shutdown MySQL Cluster:
 
 * kill all the processes ;
 
